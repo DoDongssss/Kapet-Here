@@ -62,44 +62,6 @@ function useWeeklyBest(shops: CoffeeShopWithPhotos[]) {
   }, [allFeedback, shops])
 }
 
-function CoffeePinIcon({ selected = false }: { selected?: boolean }) {
-  return (
-    <svg
-      width={selected ? 38 : 32}
-      height={selected ? 48 : 40}
-      viewBox="0 0 38 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {selected && (
-        <circle cx="19" cy="16" r="14" fill="#D4863A" opacity="0.2" />
-      )}
-      <path
-        d="M19 1C10.163 1 3 8.163 3 17c0 10 16 31 16 31s16-21 16-31C35 8.163 27.837 1 19 1z"
-        fill={selected ? "#6B3F1F" : "#9C7A5B"}
-      />
-      <circle cx="19" cy="16" r="11" fill="white" />
-      {/* cup body */}
-      <path d="M14 11h10v6a5 5 0 01-10 0V11z" fill="#D4863A" />
-      {/* handle */}
-      <path
-        d="M24 12.5c1.5 0 2.5.8 2.5 2s-1 2-2.5 2"
-        stroke="#D4863A"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* saucer */}
-      <rect x="16" y="17.5" width="6" height="1.5" rx="0.75" fill="#C07830" />
-      {/* rim */}
-      <rect x="14" y="10" width="10" height="1.5" rx="0.75" fill="#C07830" />
-      {selected && (
-        <ellipse cx="19" cy="49" rx="6" ry="2" fill="#6B3F1F" opacity="0.15" />
-      )}
-    </svg>
-  )
-}
-
 interface LocationPermissionPopupProps {
   onAllow: () => void
   onDismiss: () => void
