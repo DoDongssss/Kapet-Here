@@ -4,7 +4,7 @@ import { useCallback, useState } from "react"
 import { cn } from "@/lib/utils"
 
 interface FeedbackPhotoUploadProps {
-  value: File | null
+  value?: File | string | null
   onChange: (file: File | null) => void
   disabled?: boolean
   className?: string
@@ -33,12 +33,17 @@ export default function FeedbackPhotoUpload({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [".jpg", ".jpeg", ".png", ".webp"] },
-    maxSize: 8 * 1024 * 1024, // 8MB
+    maxSize: 8 * 1024 * 1024,
     multiple: false,
     disabled,
   })
 
-  const previewUrl = value ? URL.createObjectURL(value) : null
+  const previewUrl =
+    value instanceof File
+      ? URL.createObjectURL(value)
+      : typeof value === "string"
+      ? value
+      : null
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -63,9 +68,9 @@ export default function FeedbackPhotoUpload({
               <X className="w-4 h-4" />
             </button>
           )}
-          <div className="absolute bottom-0 inset-x-0 bg-linear-to- from-black/40 to-transparent p-3">
+          {/* <div className="absolute bottom-0 inset-x-0 bg-linear-to- from-black/40 to-transparent p-3">
             <p className="text-white text-xs">{value?.name}</p>
-          </div>
+          </div> */}
         </div>
       ) : (
         <div

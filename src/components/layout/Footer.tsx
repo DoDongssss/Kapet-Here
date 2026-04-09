@@ -62,28 +62,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Admin links */}
-          <div className="space-y-4">
-            <h3
-              className="text-[#FAF7F2] text-xs font-semibold tracking-widest uppercase"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Admin
-            </h3>
-            <ul className="space-y-2.5">
-              <li>
-                <Link
-                  to={ROUTES.ADMIN.LOGIN}
-                  className="group flex items-center gap-1.5 text-sm text-[#7A5C3A] hover:text-[#D4863A] transition-colors duration-200"
-                >
-                  Admin Login
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </Link>
-              </li>
-            </ul>
-          </div>
-
         </div>
 
         {/* ── Bottom bar ── */}

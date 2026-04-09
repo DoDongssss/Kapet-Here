@@ -10,6 +10,7 @@ interface FeedbackCardProps {
 }
 
 export default function FeedbackCard({ feedback, className }: FeedbackCardProps) {
+  console.log(feedback)
   const createdAt = feedback.created_at
     ? format(new Date(feedback.created_at), "MMM d, yyyy")
     : null
