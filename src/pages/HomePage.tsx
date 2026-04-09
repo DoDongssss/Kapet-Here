@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query"
 import { supabase } from "@/lib/supabase"
 import type { Feedback } from "@/types/feedback"
 import { motion, AnimatePresence } from "framer-motion"
+import BrandWatermark from "@/components/shared/BrandWaterMark"
 
 function getWeekStart(): string {
   const now = new Date()
@@ -281,28 +282,7 @@ export default function HomePage() {
       <MapView shops={shops} className="absolute inset-0 w-full h-full" />
 
       {/* ── Brand name — top-left watermark ── */}
-      <div
-        className={cn(
-          "absolute top-5 left-5 z-[500] select-none pointer-events-none transition-all",
-          isDrawerOpen && "z-[400]"
-        )}
-      >
-        <p
-          className="text-[22px] font-bold text-[#2A1208] leading-none drop-shadow-sm"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            textShadow: "0 1px 8px rgba(255,255,255,0.85)",
-          }}
-        >
-          Kape't Here
-        </p>
-        <p
-          className="text-[10px] font-medium tracking-widest text-[#9C7A5B] mt-0.5"
-          style={{ textShadow: "0 1px 6px rgba(255,255,255,0.7)" }}
-        >
-          FIND YOUR CUP
-        </p>
-      </div>
+      <BrandWatermark isDrawerOpen={isDrawerOpen} />
 
       {/* ── Search bar ── */}
       <div
@@ -313,7 +293,7 @@ export default function HomePage() {
         )}
       >
         <div className={cn(
-          "flex items-center gap-3 px-4 py-3 mt-12",
+          "flex items-center gap-3 px-4 py-3 mt-16",
           "bg-white/96 backdrop-blur-lg shadow-xl border transition-all duration-200",
           searchOpen && query.trim().length > 0
             ? "rounded-t-2xl border-[#D4B896] border-b-transparent"
