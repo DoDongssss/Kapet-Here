@@ -5,12 +5,8 @@ import { useMapStore } from "@/store/useMapStore"
 import MapView from "@/components/map/MapView"
 import CoffeeShopDrawer from "@/components/coffee-shop/CoffeeShopDrawer"
 import { cn } from "@/lib/utils"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import type { CoffeeShopWithPhotos } from "@/types/coffeeShop"
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Floating NAV — bottom-left pill (mobile only)
-// ─────────────────────────────────────────────────────────────────────────────
 
 function FloatingNav() {
   const { userLocation, locateUser } = useMapStore()
@@ -19,7 +15,6 @@ function FloatingNav() {
   return (
     <div className="absolute bottom-6 left-4 z-[500] flex flex-col-reverse gap-2.5 md:hidden">
 
-      {/* Location pulse button */}
       <button
         onClick={locateUser}
         aria-label="Go to my location"
@@ -40,7 +35,6 @@ function FloatingNav() {
         )}
       </button>
 
-      {/* Submit feedback */}
       <button
         onClick={() => navigate("/feedback")}
         aria-label="Submit feedback"
@@ -49,7 +43,6 @@ function FloatingNav() {
         <MessageSquarePlus className="w-5 h-5" strokeWidth={2} />
       </button>
 
-      {/* Explore map */}
       <button
         onClick={() => navigate("/explore")}
         aria-label="Explore map"
@@ -68,7 +61,6 @@ function DesktopFAB() {
 
   return (
     <div className="absolute bottom-8 left-4 z-[400] hidden md:flex flex-col gap-2">
-      {/* Location */}
       <button
         onClick={locateUser}
         aria-label="Go to my location"
@@ -89,7 +81,6 @@ function DesktopFAB() {
         )}
       </button>
 
-      {/* Feedback */}
       <button
         onClick={() => navigate("/feedback")}
         aria-label="Submit feedback"
@@ -100,10 +91,6 @@ function DesktopFAB() {
     </div>
   )
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Main Page
-// ─────────────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   const [query, setQuery]           = useState("")
@@ -121,7 +108,6 @@ export default function HomePage() {
       )
     : []
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node))
@@ -141,21 +127,16 @@ export default function HomePage() {
   return (
     <div className="relative w-full h-dvh overflow-hidden">
 
-      {/* Full-screen map */}
       <MapView shops={shops} className="absolute inset-0 w-full h-full" />
 
-      {/* ── Desktop: bottom-left FABs ── */}
       <DesktopFAB />
 
-      {/* ── Mobile: bottom-left floating nav ── */}
       <FloatingNav />
 
-      {/* ── Floating search bar — top center ── */}
       <div
         ref={searchRef}
         className="absolute top-4 left-1/2 -translate-x-1/2 z-[500] w-[88vw] max-w-md md:w-96 md:left-1/2"
       >
-        {/* Input pill */}
         <div className={cn(
           "flex items-center gap-3 px-4 py-3",
           "bg-white/95 backdrop-blur-lg shadow-xl border transition-all duration-200",
@@ -165,7 +146,7 @@ export default function HomePage() {
         )}>
           <Search
             className={cn(
-              "w-4 h-4 flex-shrink-0 transition-colors",
+              "w-4 h-4 shrink-0 transition-colors",
               searchOpen ? "text-[#6B3F1F]" : "text-[#C4A882]"
             )}
             strokeWidth={2.2}
@@ -196,7 +177,6 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Results dropdown */}
         {searchOpen && query.trim().length > 0 && (
           <div
             className={cn(
@@ -223,7 +203,6 @@ export default function HomePage() {
                         onClick={() => handleSelect(shop)}
                         className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#FFF8F0] active:bg-[#EDE3D8] transition-colors"
                       >
-                        {/* Thumbnail */}
                         <div className="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-[#EDE3D8]">
                           {cover ? (
                             <img src={cover} alt="" className="w-full h-full object-cover" />
@@ -248,7 +227,6 @@ export default function HomePage() {
                           </div>
                         </div>
 
-                        {/* Arrow hint */}
                         <div className="w-6 h-6 rounded-full bg-[#F5F0E8] flex items-center justify-center flex-shrink-0">
                           <MapPin className="w-3 h-3 text-[#9C7A5B]" strokeWidth={2} />
                         </div>
@@ -262,7 +240,6 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* Drawer */}
       <CoffeeShopDrawer />
     </div>
   )

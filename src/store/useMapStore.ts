@@ -8,9 +8,7 @@ interface UserLocation {
 }
 
 interface MapStore {
-  // The shop whose popup/drawer is currently open
   selectedShop: CoffeeShop | null
-  // The shop being navigated TO — kept alive even after drawer closes
   directionsShop: CoffeeShop | null
   userLocation: UserLocation | null
   showDirections: boolean
@@ -19,6 +17,7 @@ interface MapStore {
   setShowDirections: (show: boolean) => void
   startDirections: (shop: CoffeeShop) => void
   clearDirections: () => void
+  locateUser: () => void
 }
 
 export const useMapStore = create<MapStore>((set) => ({
@@ -27,18 +26,29 @@ export const useMapStore = create<MapStore>((set) => ({
   userLocation: null,
   showDirections: false,
 
-  // Closing the popup (selectedShop = null) no longer touches directions
   setSelectedShop: (shop) => set({ selectedShop: shop }),
-
   setUserLocation: (location) => set({ userLocation: location }),
-
   setShowDirections: (show) => set({ showDirections: show }),
 
-  // Start directions: lock in the destination shop separately from the popup
   startDirections: (shop) =>
     set({ directionsShop: shop, showDirections: true }),
 
-  // Explicitly clear the route (e.g. user taps "Clear route" banner)
   clearDirections: () =>
     set({ directionsShop: null, showDirections: false }),
+
+  locateUser: () => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (pos) =>
+        set({
+          userLocation: {
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+            accuracy: pos.coords.accuracy,
+          },
+        }),
+      (err) => console.warn("Geolocation error:", err),
+      { enableHighAccuracy: true, timeout: 8000 }
+    )
+  },
 }))
