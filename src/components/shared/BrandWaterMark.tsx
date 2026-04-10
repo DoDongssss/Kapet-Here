@@ -1,10 +1,10 @@
-import { cn } from "@/lib/utils";
-import { MapPin } from "lucide-react";
+import { MapPin } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 type BrandWatermarkProps = {
-  isDrawerOpen: boolean;
-  location?: string;
-};
+  isDrawerOpen: boolean
+  location?: string
+}
 
 export default function BrandWatermark({
   isDrawerOpen,
@@ -13,27 +13,42 @@ export default function BrandWatermark({
   return (
     <div
       className={cn(
-        "absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center px-3 py-2 rounded-xl backdrop-blur-md bg-white/40 border border-white/30 shadow-sm transition-all max-w-[85vw]",
-        isDrawerOpen ? "z-100" : "z-100"
+        // No absolute positioning — parent flex container handles placement
+        "flex flex-col items-center gap-0",
+        // Glass card
+        "px-4 py-2.5 rounded-2xl",
+        "bg-white/30 backdrop-blur-lg border border-white/50",
+        "shadow-[0_2px_16px_rgba(42,18,8,0.10),inset_0_1px_0_rgba(255,255,255,0.6)]",
+        // Sizing — shrinks to content width
+        "w-auto max-w-full",
+        // Fade + scale when drawer open
+        "transition-all duration-300 pointer-events-none",
+        isDrawerOpen ? "opacity-0 scale-95" : "opacity-100 scale-100"
       )}
     >
-      <p className="text-[14px] md:text-[20px] font-bold text-[#3B1F14] leading-none font-playfair drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]">
-        Kape't Here
-      </p>
+      {/* Logo + name row */}
+      <div className="flex items-center gap-2">
+        <img
+          src="/logo.png"
+          alt="Kape't Here"
+          className="h-7.5 w-7.5 rounded-full object-cover drop-shadow-sm flex-shrink-0"
+        />
+      </div>
 
-      <div className="w-20 h-[1px] bg-[#A67C52] mt-1 mb-1 rounded-full" />
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-[#A67C52]/50 to-transparent mt-2 mb-1.5" />
 
-      <div className="flex items-center gap-1 text-[7px] md:text-[9px] font-medium tracking-widest text-[#A67C52] font-sans">
-        <span>FIND YOUR CUP</span>
-
+      {/* Tagline + location */}
+      <div className="flex items-center gap-1.5 text-[8px] font-semibold tracking-[0.18em] text-[#A67C52] uppercase">
+        <span>Find Your Cup</span>
         {location && (
           <>
-            <span className="opacity-50">•</span>
-            <MapPin size={10} className="opacity-70" />
-            <span className="truncate max-w-25">{location}</span>
+            <span className="opacity-40">•</span>
+            <MapPin className="w-2.5 h-2.5 opacity-60 flex-shrink-0" />
+            <span className="truncate max-w-[100px] opacity-80">{location}</span>
           </>
         )}
       </div>
     </div>
-  );
+  )
 }

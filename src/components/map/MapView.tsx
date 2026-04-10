@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react"
-import { MapContainer, TileLayer, useMap } from "react-leaflet"
+import { useEffect, useRef, useState } from "react"
+import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import {
   MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM,
@@ -11,6 +11,7 @@ import CoffeeShopMarker from "./CoffeeShopMarker"
 import UserLocationMarker from "./UserLocationMarker"
 import DirectionsLayer from "./DirectionsLayer"
 import type { CoffeeShop } from "@/types/coffeeShop"
+import { Coffee } from "lucide-react"
 
 import L from "leaflet"
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png"
@@ -24,23 +25,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl:     markerShadow,
 })
 
-/** Pans map when a shop is selected */
 function MapPanner() {
   const map = useMap()
   const { selectedShop } = useMapStore()
   useEffect(() => {
     if (selectedShop)
-      map.flyTo([selectedShop.latitude, selectedShop.longitude], 15, { animate: true, duration: 0.8 })
+      map.flyTo([selectedShop.latitude, selectedShop.longitude], 15, {
+        animate: true,
+        duration: 0.8,
+      })
   }, [selectedShop, map])
   return null
 }
 
-/**
- * Listens for the "kapet:locate" custom event dispatched by useMapStore.locateUser()
- * and pans the map to the user's position.
- * This keeps Leaflet's imperative API inside a map-context component
- * while allowing external UI (floating buttons) to trigger panning.
- */
 function LocateListener() {
   const map = useMap()
   useEffect(() => {
@@ -54,15 +51,72 @@ function LocateListener() {
   return null
 }
 
+function TileReadyWatcher({ onReady }: { onReady: () => void }) {
+  // const map = useMap()
+  const fired = useRef(false)
+
+  useMapEvents({
+    load: () => {
+      if (!fired.current) {
+        fired.current = true
+        onReady()
+      }
+    },
+  })
+
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (!fired.current) {
+        fired.current = true
+        onReady()
+      }
+    }, 3000)
+    return () => clearTimeout(id)
+  }, [onReady])
+
+  return null
+}
+
+
+function MapSplash() {
+  return (
+    <div className="absolute inset-0 z-9999 bg-[#FAF7F2] flex flex-col items-center justify-center gap-5 pointer-events-none">
+      <div className="relative">
+        <div className="w-20 h-20 rounded-full bg-[#EDE3D8] flex items-center justify-center">
+          <Coffee className="w-9 h-9 text-[#6B3F1F]" strokeWidth={1.6} />
+        </div>
+        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#6B3F1F] animate-spin" />
+      </div>
+
+      <div className="text-center space-y-1">
+        <p
+          className="text-lg font-bold text-[#2A1208]"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          Kape't Here
+        </p>
+        <p className="text-xs text-[#9C7A5B]">Loading the map…</p>
+      </div>
+    </div>
+  )
+}
+
+
 interface MapViewProps {
   shops: CoffeeShop[]
   className?: string
 }
 
 export default function MapView({ shops, className }: MapViewProps) {
+  const [mapReady, setMapReady] = useState(false)
   const mapRef = useRef(null)
-  const { userLocation, directionsShop, showDirections, setSelectedShop } = useMapStore()
-  const shouldShowDirections = showDirections && !!userLocation && !!directionsShop
+
+  const { userLocation, directionsShop, showDirections, setSelectedShop } =
+    useMapStore()
+
+  const shouldShowDirections =
+    showDirections && !!userLocation && !!directionsShop
 
   return (
     <div className={`relative w-full h-full overflow-hidden ${className ?? ""}`}>
@@ -78,6 +132,7 @@ export default function MapView({ shops, className }: MapViewProps) {
       >
         <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
 
+        <TileReadyWatcher onReady={() => setMapReady(true)} />
         <MapPanner />
         <LocateListener />
 
@@ -89,7 +144,7 @@ export default function MapView({ shops, className }: MapViewProps) {
           />
         )}
 
-        {shops.map((shop) => (
+        {shops.map(shop => (
           <CoffeeShopMarker
             key={shop.id}
             shop={shop}
@@ -99,11 +154,19 @@ export default function MapView({ shops, className }: MapViewProps) {
 
         {shouldShowDirections && (
           <DirectionsLayer
-            from={{ latitude: userLocation!.latitude, longitude: userLocation!.longitude }}
-            to={{ latitude: directionsShop!.latitude, longitude: directionsShop!.longitude }}
+            from={{
+              latitude:  userLocation!.latitude,
+              longitude: userLocation!.longitude,
+            }}
+            to={{
+              latitude:  directionsShop!.latitude,
+              longitude: directionsShop!.longitude,
+            }}
           />
         )}
       </MapContainer>
+
+      {!mapReady && <MapSplash />}
 
       <div className="absolute inset-0 ring-1 ring-inset ring-black/5 pointer-events-none z-10" />
     </div>

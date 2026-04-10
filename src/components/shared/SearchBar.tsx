@@ -27,10 +27,10 @@ export default function SearchBar({
   return (
     <div
       className={cn(
-        "flex items-center gap-2.5 px-4 py-2.5 rounded-xl border transition-all duration-200 bg-white",
+        "flex items-center gap-2.5 px-4 py-2.5 rounded-xl border transition-all duration-200",
         isFocused
           ? "border-[#6B3F1F] shadow-sm shadow-[#6B3F1F]/10 ring-2 ring-[#6B3F1F]/10"
-          : "border-[#E8DDD0] hover:border-[#C4A882]",
+          : "backdrop-blur-md bg-white/40 border-white/30 shadow-sm transition-all",
         className
       )}
     >

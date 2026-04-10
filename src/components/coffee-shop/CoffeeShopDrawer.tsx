@@ -19,10 +19,6 @@ import type { CoffeeShopWithPhotos } from "@/types/coffeeShop"
 import type { Feedback } from "@/types/feedback"
 import type { CoffeeShop } from "@/types/coffeeShop"
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Sub-components at MODULE level
-// ─────────────────────────────────────────────────────────────────────────────
-
 interface DetailContentProps {
   shopDetail: CoffeeShopWithPhotos
   feedback: Feedback[]
@@ -52,7 +48,7 @@ function DetailContent({
   const photoCount = shopDetail.coffee_shop_photos?.length ?? 0
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col z-99999">
 
       {/* Gallery */}
       <div className="relative">
@@ -88,31 +84,7 @@ function DetailContent({
           )}
         </div>
 
-        {/* Divider */}
         <div className="h-px bg-[#EDE3D8]" />
-
-        {/* Stats row */}
-        {/* <div className="grid grid-cols-2 gap-2">
-          <div className="flex flex-col gap-0.5 px-3 py-2.5 rounded-xl bg-[#F5F0E8] border border-[#E8DDD0]">
-            <span className="text-[10px] font-semibold text-[#9C7A5B] uppercase tracking-widest">
-              Reviews
-            </span>
-            <span className="text-[15px] font-bold text-[#2A1208]">
-              {feedback.length > 0 ? feedback.length : "—"}
-            </span>
-          </div>
-          <div className="flex flex-col gap-0.5 px-3 py-2.5 rounded-xl bg-[#F5F0E8] border border-[#E8DDD0]">
-            <span className="text-[10px] font-semibold text-[#9C7A5B] uppercase tracking-widest">
-              Avg rating
-            </span>
-            <span className="text-[15px] font-bold text-[#2A1208]">
-              {feedback.length > 0 ? `${averageRating.toFixed(1)} ★` : "—"}
-            </span>
-          </div>
-        </div> */}
-
-        {/* Divider */}
-        {/* <div className="h-px bg-[#EDE3D8]" /> */}
 
         {/* Action buttons */}
         <div className="grid grid-cols-2 gap-2">
@@ -147,7 +119,6 @@ function DetailContent({
           </a>
         </div>
 
-        {/* Full-page link */}
         <Link
           to={coffeeShopPath(shopDetail.id)}
           onClick={onClose}

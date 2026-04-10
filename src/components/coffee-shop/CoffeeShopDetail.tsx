@@ -28,6 +28,7 @@ export default function CoffeeShopDetail({
 
   return (
     <div className="space-y-5">
+      test masarap
       {/* Gallery */}
       <CoffeeShopGallery photos={shop.coffee_shop_photos ?? []} />
 
